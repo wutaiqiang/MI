@@ -1,7 +1,7 @@
 Official code for paper `Revisiting Model Interpolation for Efficient Reasoning`
 
 <!-- <a href="https://huggingface.co/collections/taki555/timber-68db45e4f4c64c1bfe52b492"><b>[🤗 HF Models]</b></a> • -->
-<a href="https://arxiv.org/abs/"><b>[📜 Paper]</b></a> • 
+<a href="https://arxiv.org/abs/2510.10977"><b>[📜 Paper]</b></a> • 
 <a href="https://github.com/wutaiqiang/MI"><b>[🐱 GitHub]</b></a>
 
 # Environment
@@ -57,7 +57,7 @@ If you find this repository helpful, please consider citing our paper:
 @article{wu2025revisiting,
   title={Revisiting Model Interpolation for Efficient Reasoning},
   author={Wu, Taiqiang and Yang, Runming and Liu, Tao and Wang, Jiahao and Wong, Ngai.},
-  journal={arXiv preprint arXiv:2510.xxxxx},
+  journal={arXiv preprint arXiv:2510.10977},
   year={2025}
 }
 ```
