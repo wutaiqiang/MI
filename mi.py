@@ -12,7 +12,17 @@ def merge_models(args):
 
     print("\nScanning and merging .safetensors files...")
 
-    b_files = glob(os.path.join(args.model_b, '*.safetensors'))
+    b_files = glob(os.path.join(args.model_b, "*.safetensors"))
+    i_files = glob(os.path.join(args.model_i, "*.safetensors"))
+    i_tensors_all = {}
+
+    for i_path in i_files:
+        try:
+            i_tensors = load_file(i_path, device="cpu")
+        except Exception as e:
+            print(f"Error: Failed to load model files: {e}")
+            continue
+        i_tensors_all.update(i_tensors)
 
     if not b_files:
         print(f"Warning: No .safetensors files found in directory '{args.model_b}'.")
@@ -31,8 +41,7 @@ def merge_models(args):
         print(f"Lambda: {args.lambda_val}")
 
         try:
-            b_tensors = load_file(b_path, device='cpu')
-            i_tensors = load_file(i_path, device='cpu')
+            b_tensors = load_file(b_path, device="cpu")
         except Exception as e:
             print(f"Error: Failed to load model files: {e}")
             continue
@@ -41,8 +50,10 @@ def merge_models(args):
         
         print("Computing merged weights...")
         for key in tqdm(b_tensors.keys(), desc=f"Merging {filename}"):
-            if key in i_tensors:
-                merged_tensors[key] = b_tensors[key] + args.lambda_val * (i_tensors[key] - b_tensors[key])
+            if key in i_tensors_all:
+                merged_tensors[key] = b_tensors[key] + args.lambda_val * (
+                    i_tensors_all[key] - b_tensors[key]
+                )
             else:
                 print(f"  Warning: Weight '{key}' exists only in model B; copying directly.")
                 merged_tensors[key] = b_tensors[key]
@@ -58,11 +69,11 @@ def merge_models(args):
 
 
     print("\nChecking and copying other files...")
-    for filename in os.listdir(args.model_i):
-        if filename.endswith('.safetensors'):
+    for filename in os.listdir(args.model_b):
+        if filename.endswith(".safetensors"):
             continue
 
-        src_path = os.path.join(args.model_i, filename)
+        src_path = os.path.join(args.model_b, filename)
         dest_path = os.path.join(args.output_dir, filename)
 
         if not os.path.exists(dest_path):
