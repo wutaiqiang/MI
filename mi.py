@@ -19,10 +19,10 @@ def merge_models(args):
     for i_path in i_files:
         try:
             i_tensors = load_file(i_path, device="cpu")
+            i_tensors_all.update(i_tensors)
         except Exception as e:
             print(f"Error: Failed to load model files: {e}")
             continue
-        i_tensors_all.update(i_tensors)
 
     if not b_files:
         print(f"Warning: No .safetensors files found in directory '{args.model_b}'.")
