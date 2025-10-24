@@ -69,11 +69,16 @@ def merge_models(args):
 
 
     print("\nChecking and copying other files...")
-    for filename in os.listdir(args.model_b):
+    if args.copy_from_b:
+        src_dir = args.model_b
+    else:
+        src_dir = args.model_i
+    print(f"Copying remaining files from {src_dir}")
+    for filename in os.listdir(src_dir):
         if filename.endswith(".safetensors"):
             continue
 
-        src_path = os.path.join(args.model_b, filename)
+        src_path = os.path.join(src_dir, filename)
         dest_path = os.path.join(args.output_dir, filename)
 
         if not os.path.exists(dest_path):
@@ -88,6 +93,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--model_b", type=str, required=True, help="Path to the folder containing model B.")
     parser.add_argument("--model_i", type=str, required=True, help="Path to the folder containing model I.")
+    parser.add_argument("--copy_from_b", type=bool, default=False, help="True to copy other files from model B. Default to copy from I.")
     parser.add_argument("--lambda_val", type=float, required=True, help="Value of the merging hyperparameter lambda.")
     parser.add_argument("--output_dir", type=str, required=True, help="Path to the output directory for the merged model and files.")
 
